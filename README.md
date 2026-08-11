@@ -1,6 +1,5 @@
 # 🥾 The Walking Buddy
 
-![Walking Buddy Render](Assets/placeholder_image.jpg) *(Upload a screenshot of your Tinkercad/Onshape case here!)*
 
 **The Walking Buddy** is an open-source, off-grid mesh trail communicator, group tracker, and emergency SOS beacon designed for outdoor exploration. It allows hiking groups to track each other's live coordinates, send group alerts, monitor weather conditions, and trigger search-and-rescue beacons deep in the wilderness—**completely without cellular service or Wi-Fi**.
 
