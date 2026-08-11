@@ -1,73 +1,80 @@
 # 🥾 The Walking Buddy
 
+![Walking Buddy Render](Assets/placeholder_image.jpg) *(Upload a screenshot of your Tinkercad/Onshape case here!)*
 
-**The Walking Buddy** is an open-source, off-grid GPS trail communicator and emergency beacon. It allows hikers to track each other, send messages, and trigger life-saving SOS alerts deep in the wilderness—all without needing cellular service or Wi-Fi.
+**The Walking Buddy** is an open-source, off-grid mesh trail communicator, group tracker, and emergency SOS beacon designed for outdoor exploration. It allows hiking groups to track each other's live coordinates, send group alerts, monitor weather conditions, and trigger search-and-rescue beacons deep in the wilderness—**completely without cellular service or Wi-Fi**.
 
 Built as part of the **Hack Club Forge (Erebor Guild)**.
 
 ---
 
-## 🏔️ What It Does
+## 🏔️ Why It Exists & How It Works With Friends
 
-When you are out on a hike and lose cell phone service, your phone becomes a useless brick. The Walking Buddy solves this by using **LoRa (Long Range) Radio** to create a private, peer-to-peer mesh network between you and your group. 
+When hiking in remote mountains or dense forests, cellular coverage drops to zero, making it easy for groups to get separated. 
 
-### ✨ Core Features
-
-* **📡 Off-Grid LoRa Communication:** Sends GPS coordinates and data packets up to several kilometers away using the 868MHz/915MHz radio band.
-* **🚨 "PIEPS-Style" SOS Search & Rescue Mode:** 
-  * Holding the dedicated red SOS button for 3 seconds locks the device into emergency mode.
-  * It blasts a high-power LoRa distress signal.
-  * Rescuers' devices freeze on an **"SOS ALERT"** screen and use a piezo buzzer to beep faster and faster as they physically get closer to the person in trouble.
-* **📱 Bluetooth Phone Gateway:** Connects to your smartphone via BLE. If any person in the group gets a single bar of cell service, their phone can automatically relay the SOS coordinates to emergency services via SMS.
-* **⛈️ Early Storm Warnings:** Uses an onboard BME280 sensor to track atmospheric pressure drops, warning the group of incoming bad weather before it hits.
-* **🧭 Breadcrumb Backtracking:** Logs your GPS path to a MicroSD card every 30 seconds so you can retrace your steps in heavy fog.
-* **📳 Haptic Feedback:** A built-in vibration motor alerts you to group messages even when the device is zipped inside your backpack.
+**The Walking Buddy** connects everyone in your group via a private **LoRa (Long Range) Radio Mesh Network**. Each hiker carries a Buddy unit. The units silently exchange GPS locations and system status in the background every few seconds, allowing you to see where your friends are on your screen, estimate their distance from you, and stay connected at all times.
 
 ---
 
-## 🛠️ Hardware Architecture
+## ✨ Complete Feature Breakdown
 
-The device is powered by an **ESP32-S3** microcontroller and runs off a single 3.7V 3000mAh flat LiPo battery. We specifically use an ESP32-S3 board with **built-in battery charging**, meaning you only need one USB-C port on the outside of the case to charge it and update code!
+### 🛰️ Group Hiking & Mesh Tracking
+* **Real-Time Group Radar:** See direction arrows and distances to each friend in your hiking group right on the 1.3" color screen.
+* **Peer-to-Peer Mesh Networking:** Devices automatically relay messages through each other, extending the total group range up to several kilometers over mountain ridges.
+* **Off-Grid Group Ping:** Send quick haptic alerts ("Wait up!", "Taking a break", "Need assistance") to the entire group without needing phone service.
 
-### Inside the Case:
-1. **Brain:** ESP32-S3 (Dual-Core, WiFi/BLE)
-2. **Radio:** SX1262 SPI LoRa Module
-3. **Display:** 1.3" ST7789 IPS Color Screen (240x240)
-4. **Navigation:** ATGM336H GPS Module
-5. **Sensors:** BME280 (Temp/Pressure/Humidity)
-6. **Alerts:** Active Piezo Buzzer & Coin Vibration Motor
-7. **Storage:** SPI MicroSD Reader
+### 🔋 Battery Life & Power Performance
+Powered by a single **3.7V 3000mAh flat LiPo battery** running an optimized ESP32-S3 power profile:
 
-> **Note:** For a full, itemized list of components and estimated costs, please see the `BOM.md` (Bill of Materials) file in this repository.
+* **Active Trail Tracking (Continuous GPS + LoRa Mesh + Screen On):** **20 – 25 Hours** *(More than enough for a full multi-day backcountry trip).*
+* **Eco / Saver Mode (Screen Off, GPS/LoRa Ping every 60s):** **Up to 3 – 5 Days**.
+* **Single USB-C Charging & Data:** Charge the internal battery and flash new code updates through a single external USB-C port on the case.
+
+### 🚨 "PIEPS-Style" Search & Rescue Emergency Mode
+* **Guarded 3-Second Hold:** Holding the dedicated red SOS button for 3 seconds locks the unit into maximum-power emergency broadcast mode.
+* **Variable-Rate Audio Beeper:** Rescuers' units lock onto the distress signal. The built-in piezo buzzer beeps faster as a rescuer physically gets closer to the missing hiker:
+  * *Far away (>100m):* Slow pulse (1 beep / 2 seconds)
+  * *Getting closer (20m - 100m):* Medium pulse (1 beep / second)
+  * *Immediate vicinity (<20m):* Rapid continuous chirping
+* **BLE Phone Relay Gateway:** If any single hiker in the group hits a ridge with even one bar of cellular coverage, their phone connects via Bluetooth (BLE) to pass the emergency GPS coordinates out to emergency services via SMS.
+
+### 🌦️ Navigation & Environmental Monitoring
+* **Early Storm Warnings:** An onboard **BME280 sensor** continuously measures barometric pressure drops, warning your group of incoming mountain storms before they hit.
+* **MicroSD Breadcrumb Logging:** Automatically records your GPS trail coordinates to a MicroSD card every 30 seconds so you can safely retrace your steps in fog or nightfall.
+* **Haptic Vibration Alerts:** Integrated coin vibration motor alerts you to group messages or storm warnings even when the device is stowed in a backpack pocket.
 
 ---
 
-## 📂 Repository Structure
+## 🛠️ Hardware Specifications
 
-If you want to build your own Walking Buddy, everything you need is organized into these folders:
-
-* 📁 **`/CAD`** — Contains the 3D printable `.stl` and `.step` files for the rugged PETG enclosure.
-* 📁 **`/Electronics`** — Contains the wiring diagrams and custom PCB schematics.
-* 📁 **`/Firmware`** — Contains the C++ source code to flash onto the ESP32-S3.
-* 📁 **`/Assets`** — High-resolution photos, 3D renders, and UI screenshots.
+| Component | Part Selection | Function |
+| :--- | :--- | :--- |
+| **Brain** | ESP32-S3 (N16R8) | Microcontroller with Wi-Fi, BLE, and integrated LiPo charging |
+| **Radio** | SX1262 LoRa Transceiver | 868MHz / 915MHz long-range mesh radio communications |
+| **GPS** | ATGM336H GNSS Module | High-precision position tracking with active ceramic patch antenna |
+| **Display** | 1.3" ST7789 IPS Display | $240 \times 240$ high-brightness sunlight-readable screen |
+| **Sensors** | BME280 | Temperature, humidity, barometric pressure, and altitude |
+| **Alerts** | Active Piezo + Vibration Motor | Multi-sensory audio/haptic feedback for alerts & SOS tracking |
+| **Power** | 3.7V 3000mAh Flat LiPo | ~25hr active battery runtime in a compact $8\text{mm}$ pouch |
+| **Enclosure**| 3D-Printed PETG Case | Rugged, $28\text{mm}$ thick drop-resistant enclosure |
 
 ---
 
-## 💻 Software Overview
+## ⚠️ Prototype Status & Disclaimer
 
-The firmware is written in **C++** using PlatformIO / Arduino IDE. Here is a quick look at how the SOS logic is handled in the code:
+> **CRITICAL NOTICE:**  
+> This repository contains **experimental prototype firmware and untested electronic schematics** created for educational purposes as part of Hack Club Forge. 
+> 
+> This hardware and software **HAS NOT BEEN FIELD TESTED** or certified by emergency response services. **DO NOT rely on this device as your sole emergency signaling tool or life-safety apparatus in hazardous environments.** Always carry a dedicated commercial PLB (Personal Locator Beacon) or satellite communicator when venturing into backcountry wilderness.
 
-```cpp
-// Example logic for the PIEPS-style SOS distance beeper
-void handleSOSBeep(float distanceToTarget) {
-  if (distanceToTarget > 500.0) {
-    // Far away: Slow beep every 2 seconds
-    triggerBuzzer(100, 2000); 
-  } else if (distanceToTarget <= 500.0 && distanceToTarget > 50.0) {
-    // Getting closer: Medium beep every 1 second
-    triggerBuzzer(100, 1000);
-  } else {
-    // Very close (<50m): Rapid continuous beeping
-    triggerBuzzer(100, 250);
-  }
-}
+---
+
+## 📂 Repository Layout
+
+```text
+├── CAD/            # 3D printable STL and STEP files for the PETG enclosure
+├── Electronics/    # Schematics, pinout tables, and PCB layout documentation
+├── Firmware/       # C++ ESP32-S3 source code and PlatformIO configurations
+├── Assets/         # Project images, UI designs, and render graphics
+├── README.md       # Project overview
+└── LICENSE         # MIT Open Source License
